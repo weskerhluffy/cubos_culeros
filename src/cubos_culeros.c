@@ -80,9 +80,12 @@ int main(int argc, char *argv[]) {
 		}
 		num_de_cubos = strtol(buffer, NULL, 10);
 		if (num_de_cubos) {
+//			printf("numbero de culos %d\n", num_de_cubos);
 			if (anterior_num_de_cubos) {
 				generar_posiciones_cubos(definiciones_cubos, posiciones_cubos,
 						num_de_cubos_guardados);
+				//			imprimir_posiciones_cubos(posiciones_cubos,
+				//					num_de_cubos_guardados);
 				comparar_cubos(posiciones_cubos, num_de_cubos_guardados,
 						conteo_posiciones_comunes_pivote,
 						indices_maximas_coincidencias_en_cubo,
@@ -104,9 +107,10 @@ int main(int argc, char *argv[]) {
 			anterior_num_de_cubos = num_de_cubos;
 			num_de_cubos_guardados = 0;
 		} else {
+//			printf("definicion de culo %s", buffer);
 			mapear_definicion_cubo(definicion_cubo, buffer);
 			join_integers(definicion_cubo, 6, buffershit, 512);
-			 printf("yo se que ya no m kieres %s\n", buffershit);
+//			printf("yo se que ya no m kieres %s\n", buffershit);
 			memcpy((void * )*(definiciones_cubos + num_de_cubos_guardados),
 					(void * )definicion_cubo, 6 * (sizeof(int)));
 			num_de_cubos_guardados++;
@@ -115,6 +119,7 @@ int main(int argc, char *argv[]) {
 	}
 	generar_posiciones_cubos(definiciones_cubos, posiciones_cubos,
 			num_de_cubos_guardados);
+//	imprimir_posiciones_cubos(posiciones_cubos, num_de_cubos_guardados);
 	comparar_cubos(posiciones_cubos, num_de_cubos_guardados,
 			conteo_posiciones_comunes_pivote,
 			indices_maximas_coincidencias_en_cubo, coincidencias_en_cubo);
@@ -134,11 +139,13 @@ void mapear_definicion_cubo(int *array_definiciones_cubos,
 	int valor_color = 0;
 	pch = strtok(cadena_definicion_cubos, " \n");
 	while (pch != NULL ) {
+//		printf("token %s\n", pch);
 		if ((valor_color = equivalencia_color(pch)) == -1) {
 			strcpy(*(mapa_colores + num_colores_encontrados), pch);
 			valor_color = num_colores_encontrados++;
 		}
 
+//		printf("valor color %d\n", valor_color);
 		*(array_definiciones_cubos + index) = valor_color;
 		index++;
 		pch = strtok(NULL, " \n");
@@ -166,9 +173,13 @@ void generar_posiciones_cubos(int (*definiciones_cubos)[6],
 	int i = 0;
 	int indice_cara_cubo = 0;
 	char buffer[512];
+//	printf("generando mierdassssssss %d\n", num_cubos);
+//	printf("como dona a su agujero %d\n", *((*(definiciones_cubos + 1)) + 0));
 	for (i = 0; i < num_cubos; i++) {
+//		printf("numero de culo %d", i);
 		for (indice_cara_cubo = 0; indice_cara_cubo < 6; indice_cara_cubo++) {
 			join_integers(*(definiciones_cubos + i), 6, buffer, 512);
+//			printf("cara de culo pivote %d: %s\n", indice_cara_cubo, buffer);
 			switch (indice_cara_cubo) {
 			case 0:
 				*(*(*(posiciones_cubos + i) + indice_cara_cubo) + 0) =
@@ -296,8 +307,11 @@ void comparar_cubos(int (*posiciones_cubos)[6][6], int num_cubos,
 	int *posicion_cubo_en_conteo_actual = NULL;
 	int *posicion_cubo_en_el_que_se_busca_actual = NULL;
 
+//	printf("shit %d\n", num_cubos);
+	// Inicializando conteo de coincidencias
 	for (indice_cubo_en_conteo = 0; indice_cubo_en_conteo < num_cubos;
 			indice_cubo_en_conteo++) {
+//		printf("WTF!!!\n");
 		for (indice_posicion_cubo_en_conteo = 0;
 				indice_posicion_cubo_en_conteo < 6;
 				indice_posicion_cubo_en_conteo++) {
@@ -306,23 +320,30 @@ void comparar_cubos(int (*posiciones_cubos)[6][6], int num_cubos,
 		}
 	}
 
+	// Cubo para el cual se estan contando coincidencias con las otras caras de los otros cubos
 	for (indice_cubo_en_conteo = 0; indice_cubo_en_conteo < num_cubos;
 			indice_cubo_en_conteo++) {
 		cubo_en_conteo_actual = *(posiciones_cubos + indice_cubo_en_conteo);
+//		printf("no no no el coco no\n");
+		// Cara del culo del que se estan contando coincidencias
 		for (indice_posicion_cubo_en_conteo = 0;
 				indice_posicion_cubo_en_conteo < 6;
 				indice_posicion_cubo_en_conteo++) {
 			posicion_cubo_en_conteo_actual = *(cubo_en_conteo_actual
 					+ indice_posicion_cubo_en_conteo);
+			// Cubo en el que se buscan coincidencias
 			for (indice_cubo_en_el_que_se_busca = 0;
 					indice_cubo_en_el_que_se_busca < num_cubos;
 					indice_cubo_en_el_que_se_busca++) {
+				// No comparar posiciones dentro de un mismo culo
 				if (indice_cubo_en_conteo == indice_cubo_en_el_que_se_busca) {
 					continue;
 				}
 				cubo_en_el_que_se_busca_actual = *(posiciones_cubos
 						+ indice_cubo_en_el_que_se_busca);
+				// Inicializar el maximo numero de coincidencias dentro del cubo actual
 				max_coincidencias_en_cubo_actual = 0;
+				// Cara del cubo en el que se buscan coincidencias
 				for (indice_posicion_cubo_en_el_que_se_busca = 0;
 						indice_posicion_cubo_en_el_que_se_busca < 6;
 						indice_posicion_cubo_en_el_que_se_busca++) {
@@ -335,12 +356,16 @@ void comparar_cubos(int (*posiciones_cubos)[6][6], int num_cubos,
 					 indice_posicion_cubo_en_conteo,
 					 indice_cubo_en_el_que_se_busca,
 					 indice_posicion_cubo_en_el_que_se_busca);*/
+					// Comparacion de cubos, conteo de coincidencias
 					num_coincidencias = contar_coincidencias_posiciones(
 							posicion_cubo_en_conteo_actual,
 							posicion_cubo_en_el_que_se_busca_actual, 0);
+					// Añadir el conteo de coincidencias actual al global de cada posicion con todas las demas posiciones en otros cubos
 					*(*(conteo_posiciones_comunes_pivote + indice_cubo_en_conteo)
 							+ indice_posicion_cubo_en_conteo) +=
 							num_coincidencias;
+					// Si el numero de coincidencias en la posicion del cubo que se busca actual es mayor al maximo registrado, actualizar dicho maximo y el indice donde se
+					// encontro ese maximo
 					/*
 					 printf(
 					 "max coincidencias %d contra num de coincidencias actuales %d\n",
@@ -352,12 +377,14 @@ void comparar_cubos(int (*posiciones_cubos)[6][6], int num_cubos,
 						indice_max_coincidencias_en_cubo_actual =
 								indice_posicion_cubo_en_el_que_se_busca;
 					}
+					// Guardar las coincidencias de esta comparacion
 					*(*(*(*(coincidencias_en_cubo + indice_cubo_en_conteo)
 							+ indice_posicion_cubo_en_conteo)
 							+ indice_cubo_en_el_que_se_busca)
 							+ indice_posicion_cubo_en_el_que_se_busca) =
 							num_coincidencias;
 				}
+				// Guardar el indice donde se encontro el maximo de coincidencias para el cubo en que se busca actualmente
 				*(*(*(indices_maximas_coincidencias_en_cubo
 						+ indice_cubo_en_conteo)
 						+ indice_posicion_cubo_en_conteo)
@@ -389,9 +416,8 @@ int contar_coincidencias_posiciones(int *posicion_culo_en_conteo,
 	char buffershit1[512];
 	join_integers(posicion_culo_en_conteo, 6, buffershit, 512);
 	join_integers(posicion_culo_en_el_que_se_busca, 6, buffershit1, 512);
-	/*
-	 printf("comparando culo %s con %s\n", buffershit, buffershit1);
-	 */
+//	printf("comparando culo %s con %s\n", buffershit, buffershit1);
+
 	for (indice_cara_culo_en_el_que_se_busca = 0;
 			indice_cara_culo_en_el_que_se_busca < 8;
 			indice_cara_culo_en_el_que_se_busca++) {
@@ -399,6 +425,7 @@ int contar_coincidencias_posiciones(int *posicion_culo_en_conteo,
 				*(posicion_culo_en_el_que_se_busca + 1
 						+ indice_cara_culo_en_el_que_se_busca % 4);
 	}
+	// Comparacion de cubos iniciando por cada cara lateral
 	for (indice_cara_lateral_inicial = 0; indice_cara_lateral_inicial < 4;
 			indice_cara_lateral_inicial++) {
 		coincidencias_caras_laterales = 0;
@@ -416,9 +443,11 @@ int contar_coincidencias_posiciones(int *posicion_culo_en_conteo,
 			indice_maximas_coincidencias = indice_cara_lateral_inicial;
 		}
 	}
+	// Checando la cara de arriba
 	if (*posicion_culo_en_conteo == *posicion_culo_en_el_que_se_busca) {
 		num_coincidencias++;
 	}
+	// Checando la cara de abajo
 	if (*(posicion_culo_en_conteo + 5)
 			== *(posicion_culo_en_el_que_se_busca + 5)) {
 		num_coincidencias++;
@@ -470,6 +499,7 @@ int calcular_num_minimo_de_caras_diferentes(
 	int mapa_conteo_colores[1024];
 	char pasitotuntun[512];
 
+	// Sacando el pivote con mayor numero de coincidencias
 	for (indice_cubo = 0; indice_cubo < num_cubos; indice_cubo++) {
 		for (indice_posicion_cubo = 0; indice_posicion_cubo < 6;
 				indice_posicion_cubo++) {
@@ -481,19 +511,19 @@ int calcular_num_minimo_de_caras_diferentes(
 				indice_posicion_maximas_coincidencias = indice_posicion_cubo;
 			}
 		}
+		// Inicializando los cubos a comparar
 		*(cubos_a_comparar + indice_cubo) = NULL;
 
 	}
 
+	// Arreglar las caras laterales de los cubos
 	posicion_cubo_pivote = *(*(posiciones_cubos
 			+ indice_cubo_maximas_coincidencias)
 			+ indice_posicion_maximas_coincidencias);
 	maximas_coincidencias = 0;
 	cubos_a_comparar[indice_cubo_maximas_coincidencias] = posicion_cubo_pivote;
 	join_integers(posicion_cubo_pivote, 6, pasitotuntun, 512);
-	/*
-	 printf("si bailas de aki, paya %s\n", pasitotuntun);
-	 */
+//	printf("si bailas de aki, paya %s\n", pasitotuntun);
 	for (indice_cubo = 0; indice_cubo < num_cubos; indice_cubo++) {
 		if (indice_cubo == indice_cubo_maximas_coincidencias) {
 			continue;
@@ -512,11 +542,10 @@ int calcular_num_minimo_de_caras_diferentes(
 				posicion_cubo_a_arreglar_caras_laterales, 1);
 		join_integers(posicion_cubo_a_arreglar_caras_laterales, 6, pasitotuntun,
 				512);
-		/*
-		 printf("si bailas de aya, paca %s\n", pasitotuntun);
-		 */
+//		printf("si bailas de aya, paca %s\n", pasitotuntun);
 
 	}
+	// Haciendo el conteo por columna
 	for (indice_posicion_cubo = 0; indice_posicion_cubo < 6;
 			indice_posicion_cubo++) {
 		for (color = 0; color < 1024; color++) {
