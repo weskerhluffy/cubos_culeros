@@ -4,3 +4,9 @@ src/cubos
 src/cubos.dSYM/Contents/Resources/DWARF/cubos
 
 src/cubos.dSYM/Contents/Resources/DWARF/cubos
+
+*.plist
+
+src/cubosa.dSYM/Contents/Resources/DWARF/cubosa
+
+src/cubosa
