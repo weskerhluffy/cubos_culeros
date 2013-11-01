@@ -25,8 +25,7 @@ int num_colores_encontrados = 0;
 void mapear_definicion_cubo(int *array_definiciones_cubos,
 		char *cadena_definicion_cubos);
 int equivalencia_color(char *nombre_color);
-size_t join_integers(const int *num, size_t num_len, char *buf,
-		size_t buf_len);
+size_t join_integers(const int *num, size_t num_len, char *buf, size_t buf_len);
 void generar_posiciones_pivote(int (*definiciones_cubos)[6],
 		int (*posiciones_cubos)[6][6], int num_cubos);
 void generar_posiciones_cubo(int (*definiciones_cubos)[6],
@@ -85,25 +84,11 @@ int main(int argc, char *argv[]) {
 						num_de_cubos_guardados);
 				generar_posiciones_cubo(definiciones_cubos, posiciones_pivote,
 						posiciones_cubos, num_de_cubos_guardados);
-				imprimir_posiciones_cubos(posiciones_cubos,
+//				imprimir_posiciones_cubos(posiciones_cubos,
+//						num_de_cubos_guardados);
+				num_min_caras_diferentes = comparar_cubos(posiciones_cubos,
 						num_de_cubos_guardados);
-				/*
-				 comparar_cubos(posiciones_cubos, num_de_cubos_guardados,
-				 conteo_posiciones_comunes_pivote,
-				 indices_maximas_coincidencias_en_cubo,
-				 coincidencias_en_cubo);
-				 imprimir_conteo_posiciones_comunes(
-				 conteo_posiciones_comunes_pivote,
-				 num_de_cubos_guardados);
-				 num_min_caras_diferentes =
-				 calcular_num_minimo_de_caras_diferentes(
-				 conteo_posiciones_comunes_pivote,
-				 num_de_cubos_guardados,
-				 indices_maximas_coincidencias_en_cubo,
-				 coincidencias_en_cubo, posiciones_cubos);
-				 printf("%d\n", num_min_caras_diferentes);
-				 */
-
+				printf("%d\n", num_min_caras_diferentes);
 			}
 			anterior_num_de_cubos = num_de_cubos;
 			num_de_cubos_guardados = 0;
@@ -112,8 +97,8 @@ int main(int argc, char *argv[]) {
 			mapear_definicion_cubo(definicion_cubo, buffer);
 			join_integers(definicion_cubo, 6, buffershit, 512);
 //			printf("yo se que ya no m kieres %s\n", buffershit);
-			memcpy((void *) *(definiciones_cubos + num_de_cubos_guardados),
-					(void *) definicion_cubo, 6 * (sizeof(int)));
+			memcpy((void * ) *(definiciones_cubos + num_de_cubos_guardados),
+					(void * ) definicion_cubo, 6 * (sizeof(int)));
 			num_de_cubos_guardados++;
 
 		}
@@ -122,17 +107,10 @@ int main(int argc, char *argv[]) {
 			num_de_cubos_guardados);
 	generar_posiciones_cubo(definiciones_cubos, posiciones_pivote,
 			posiciones_cubos, num_de_cubos_guardados);
-	imprimir_posiciones_cubos(posiciones_cubos, num_de_cubos_guardados);
-	/*
-	 comparar_cubos(posiciones_cubos, num_de_cubos_guardados,
-	 conteo_posiciones_comunes_pivote,
-	 indices_maximas_coincidencias_en_cubo, coincidencias_en_cubo);
-	 num_min_caras_diferentes = calcular_num_minimo_de_caras_diferentes(
-	 conteo_posiciones_comunes_pivote, num_de_cubos_guardados,
-	 indices_maximas_coincidencias_en_cubo, coincidencias_en_cubo,
-	 posiciones_cubos);
-	 printf("%d\n", num_min_caras_diferentes);
-	 */
+	//imprimir_posiciones_cubos(posiciones_cubos, num_de_cubos_guardados);
+	num_min_caras_diferentes = comparar_cubos(posiciones_cubos,
+			num_de_cubos_guardados);
+	printf("%d\n", num_min_caras_diferentes);
 
 	return EXIT_SUCCESS;
 }
@@ -143,7 +121,7 @@ void mapear_definicion_cubo(int *array_definiciones_cubos,
 	int index = 0;
 	int valor_color = 0;
 	pch = strtok(cadena_definicion_cubos, " \n");
-	while (pch != NULL) {
+	while (pch != NULL ) {
 //		printf("token %s\n", pch);
 		if ((valor_color = equivalencia_color(pch)) == -1) {
 			strcpy(*(mapa_colores + num_colores_encontrados), pch);
@@ -157,8 +135,7 @@ void mapear_definicion_cubo(int *array_definiciones_cubos,
 	}
 }
 
-size_t join_integers(const int *num, size_t num_len, char *buf,
-		size_t buf_len) {
+size_t join_integers(const int *num, size_t num_len, char *buf, size_t buf_len) {
 	size_t i;
 	unsigned int written = 0;
 
@@ -345,20 +322,20 @@ void imprimir_posiciones_cubos(int (*posiciones_cubos)[6][4][6], int num_cubos) 
 void contador_gauger(int acumuladores[4], int carries[4], int num_acumuladores,
 		int tope_contadores) {
 	int indice_acumulador = 0;
-	for (indice_acumulador = num_acumuladores - 1; indice_acumulador > 0;
+
+	indice_acumulador = num_acumuladores - 1;
+	if (++*(acumuladores + indice_acumulador) >= tope_contadores) {
+		*(carries + indice_acumulador) = 1;
+		*(acumuladores + indice_acumulador) = 0;
+	}
+	for (indice_acumulador = num_acumuladores - 2; indice_acumulador >= 0;
 			indice_acumulador--) {
-		if (indice_acumulador < num_acumuladores
-				&& *(carries + indice_acumulador + 1)) {
-			if (++*(acumuladores + indice_acumulador) > tope_contadores) {
+		if (*(carries + indice_acumulador + 1)) {
+			if (++*(acumuladores + indice_acumulador) >= tope_contadores) {
 				*(carries + indice_acumulador) = 1;
 				*(acumuladores + indice_acumulador) = 0;
 			}
 			*(carries + indice_acumulador + 1) = 0;
-		}
-		// El carry podria estar encendido, y aun asi, aumenta el acumulador
-		if (++*(acumuladores + indice_acumulador) > tope_contadores) {
-			*(carries + indice_acumulador) = 1;
-			*(acumuladores + indice_acumulador) = 0;
 		}
 	}
 }
@@ -378,6 +355,8 @@ int contar_diferencias(int posiciones_cubos[4][6][4][6], int indices_pivotes[4],
 		for (color = 0; color < 1024; color++) {
 			mapa_conteo_colores[color] = 0;
 		}
+		// Reset al color con ocurrencias maximas.
+		color_ocurrencias_maximas = 0;
 		for (indice_cubo = 0; indice_cubo < num_cubos; ++indice_cubo) {
 			cubo_actual = *(*(*(posiciones_cubos + indice_cubo)
 					+ *(indices_pivotes + indice_cubo))
@@ -416,8 +395,11 @@ int comparar_cubos(int (*posiciones_cubos)[6][4][6], int num_cubos) {
 			if (num_diferencias_actual < min_num_diferencias) {
 				min_num_diferencias = num_diferencias_actual;
 			}
+			contador_gauger(indices_rotaciones, carries_indices_rotaciones,
+					num_cubos, 4);
 		}
-		*carries_indices_pivotes = 0;
+		*carries_indices_rotaciones = 0;
+		contador_gauger(indices_pivotes, carries_indices_pivotes, num_cubos, 6);
 	}
 
 	return min_num_diferencias;
