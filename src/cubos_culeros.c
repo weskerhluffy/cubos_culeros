@@ -20,11 +20,10 @@
 #include <limits.h>
 
 // TODO: Contar solo una vez arriba y abajo.
-// TODO: Reducir a 24 el mapa de colores.
 // TODO: Blankear dicho mapa con memset? o bingint?
 // TODO: Cache de columnas?
 
-char mapa_colores[1024][25];
+char mapa_colores[24][25];
 int num_colores_encontrados = 0;
 
 void mapear_definicion_cubo(int *array_definiciones_cubos,
@@ -97,6 +96,7 @@ int main(int argc, char *argv[]) {
 			}
 			anterior_num_de_cubos = num_de_cubos;
 			num_de_cubos_guardados = 0;
+			num_colores_encontrados = 0;
 		} else {
 //			printf("definicion de culo %s", buffer);
 			mapear_definicion_cubo(definicion_cubo, buffer);
@@ -352,12 +352,12 @@ int contar_diferencias(int posiciones_cubos[4][6][4][6], int indices_pivotes[4],
 	int indice_cara = 0;
 	int indice_cubo = 0;
 	int color_ocurrencias_maximas = 0;
-	int mapa_conteo_colores[1024];
+	int mapa_conteo_colores[24];
 	int *cubo_actual = NULL;
 
 	for (indice_cara = 0; indice_cara < 6; ++indice_cara) {
 		// Reset del mapa de colores para cada cara.
-		for (color = 0; color < 1024; color++) {
+		for (color = 0; color < 24; color++) {
 			mapa_conteo_colores[color] = 0;
 		}
 		// Reset al color con ocurrencias maximas.
