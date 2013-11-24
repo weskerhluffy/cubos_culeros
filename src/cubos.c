@@ -19,11 +19,6 @@
 #include <errno.h>
 #include <limits.h>
 
-// TODO: Contar solo una vez arriba y abajo.
-// TODO: Reducir a 24 el mapa de colores.
-// TODO: Blankear dicho mapa con memset? o bingint?
-// TODO: Cache de columnas?
-
 char mapa_colores[1024][25];
 int num_colores_encontrados = 0;
 
@@ -83,25 +78,19 @@ int main(int argc, char *argv[]) {
 		}
 		num_de_cubos = strtol(buffer, NULL, 10);
 		if (num_de_cubos) {
-//			printf("numbero de culos %d\n", num_de_cubos);
 			if (anterior_num_de_cubos) {
 				generar_posiciones_pivote(definiciones_cubos, posiciones_pivote,
 						num_de_cubos_guardados);
 				generar_posiciones_cubo(definiciones_cubos, posiciones_pivote,
 						posiciones_cubos, num_de_cubos_guardados);
-//				imprimir_posiciones_cubos(posiciones_cubos,
-//						num_de_cubos_guardados);
 				num_min_caras_diferentes = comparar_cubos(posiciones_cubos,
 						num_de_cubos_guardados);
-				printf("%d\n", num_min_caras_diferentes);
 			}
 			anterior_num_de_cubos = num_de_cubos;
 			num_de_cubos_guardados = 0;
 		} else {
-//			printf("definicion de culo %s", buffer);
 			mapear_definicion_cubo(definicion_cubo, buffer);
 			join_integers(definicion_cubo, 6, buffershit, 512);
-//			printf("yo se que ya no m kieres %s\n", buffershit);
 			memcpy((void * ) *(definiciones_cubos + num_de_cubos_guardados),
 					(void * ) definicion_cubo, 6 * (sizeof(int)));
 			num_de_cubos_guardados++;
@@ -112,7 +101,6 @@ int main(int argc, char *argv[]) {
 			num_de_cubos_guardados);
 	generar_posiciones_cubo(definiciones_cubos, posiciones_pivote,
 			posiciones_cubos, num_de_cubos_guardados);
-	//imprimir_posiciones_cubos(posiciones_cubos, num_de_cubos_guardados);
 	num_min_caras_diferentes = comparar_cubos(posiciones_cubos,
 			num_de_cubos_guardados);
 	printf("%d\n", num_min_caras_diferentes);
@@ -127,13 +115,11 @@ void mapear_definicion_cubo(int *array_definiciones_cubos,
 	int valor_color = 0;
 	pch = strtok(cadena_definicion_cubos, " \n");
 	while (pch != NULL ) {
-//		printf("token %s\n", pch);
 		if ((valor_color = equivalencia_color(pch)) == -1) {
 			strcpy(*(mapa_colores + num_colores_encontrados), pch);
 			valor_color = num_colores_encontrados++;
 		}
 
-//		printf("valor color %d\n", valor_color);
 		*(array_definiciones_cubos + index) = valor_color;
 		index++;
 		pch = strtok(NULL, " \n");
@@ -159,13 +145,9 @@ void generar_posiciones_pivote(int (*definiciones_cubos)[6],
 	int i = 0;
 	int indice_cara_cubo = 0;
 	char buffer[512];
-//	printf("generando mierdassssssss %d\n", num_cubos);
-//	printf("como dona a su agujero %d\n", *((*(definiciones_cubos + 1)) + 0));
 	for (i = 0; i < num_cubos; i++) {
-//		printf("numero de culo %d", i);
 		for (indice_cara_cubo = 0; indice_cara_cubo < 6; indice_cara_cubo++) {
 			join_integers(*(definiciones_cubos + i), 6, buffer, 512);
-//			printf("cara de culo pivote %d: %s\n", indice_cara_cubo, buffer);
 			switch (indice_cara_cubo) {
 			case 0:
 				*(*(*(posiciones_pivote + i) + indice_cara_cubo) + 0) =
@@ -262,8 +244,6 @@ void generar_posiciones_pivote(int (*definiciones_cubos)[6],
 void generar_posiciones_cubo(int (*definiciones_cubos)[6],
 		int (*posiciones_pivote)[6][6], int posiciones_cubos[4][6][4][6],
 		int num_cubos) {
-//	int acumuladores[] = { 0, 0, 0, 0 };
-//	int carries[] = { 0, 0, 0, 0 };
 	int num_cubo = 0;
 	int num_pivote = 0;
 	int num_cara_lateral = 0;
@@ -274,15 +254,12 @@ void generar_posiciones_cubo(int (*definiciones_cubos)[6],
 
 	for (num_cubo = 0; num_cubo < num_cubos; ++num_cubo) {
 		for (num_pivote = 0; num_pivote < 6; ++num_pivote) {
-			// Obteniendo el culo pivote
 			cubo_pivote = *(*(posiciones_pivote + num_cubo) + num_pivote);
-			// Generando la secuencia de caras laterales
 			for (num_cara_lateral = 0; num_cara_lateral < 8;
 					num_cara_lateral++) {
 				*(sequencia_caras_laterales + num_cara_lateral) = *(cubo_pivote
 						+ 1 + num_cara_lateral % 4);
 			}
-			// Generando rotaciones de cubos
 			for (num_rotacion = 0; num_rotacion < 4; ++num_rotacion) {
 				cubo_rotacion = *(*(*(posiciones_cubos + num_cubo) + num_pivote)
 						+ num_rotacion);
@@ -356,11 +333,9 @@ int contar_diferencias(int posiciones_cubos[4][6][4][6], int indices_pivotes[4],
 	int *cubo_actual = NULL;
 
 	for (indice_cara = 0; indice_cara < 6; ++indice_cara) {
-		// Reset del mapa de colores para cada cara.
 		for (color = 0; color < 1024; color++) {
 			mapa_conteo_colores[color] = 0;
 		}
-		// Reset al color con ocurrencias maximas.
 		color_ocurrencias_maximas = 0;
 		for (indice_cubo = 0; indice_cubo < num_cubos; ++indice_cubo) {
 			cubo_actual = *(*(*(posiciones_cubos + indice_cubo)
